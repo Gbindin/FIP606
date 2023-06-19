@@ -1,0 +1,77 @@
+project:
+  type: website
+  output-dir: docs
+
+execute: 
+  cache: true
+  freeze: auto
+  warning: false
+
+website:
+  title: "Gbindinnuola"
+  navbar:
+    left:
+      - href: index.qmd
+        text: INITIAL
+      - text: R BASIC
+        menu: 
+          - href: AULA 1.qmd
+            text: AULA 1
+          - href: AULA 2.qmd
+            text: AULA 2
+          - href: AULA 3.qmd
+            text: AULA 3
+          - href: AULA 4.qmd
+            text: AULA 4
+          - href: AULA 5.qmd
+            text: AULA 5
+            
+      - text: STATISTICAL ANALYSIS
+        menu: 
+          - href: AULA 6.qmd
+            text: AULA 6
+          - href: AULA 7.qmd
+            text: AULA 7
+          - href: AULA 8.qmd
+            text: AULA 8
+          - href: AULA 9.qmd
+            text: AULA 9
+          - href: AULA 10.qmd
+            text: AULA 10
+          - href: AULA 11.qmd
+            text: AULA 11
+          - href: AULA 12.qmd
+            text: AULA 12
+          - href: AULA 13.qmd
+            text: AULA 13
+          - href: AULA 14.qmd
+            text: AULA 14
+          - href: AULA 15.qmd
+            text: AULA 15
+          - href: AULA 17.qmd
+            text: AULA 17
+            
+      - text: SPATIAL ANALYSIS
+        menu: 
+          - href: AULA 16.qmd
+            text: AULA 16
+
+      - text: BOXCOX TRANSFORMATION
+        menu: 
+          - href: AULA 18.qmd
+            text: AULA 18
+            
+    right: 
+      - icon: twitter
+        href: https://twitter.com/Temmykeji
+      - icon: github
+        href: https://github.com/Gbindin
+      
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
