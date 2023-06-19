@@ -1,0 +1,76 @@
+---
+title: "AULA 7"
+format: html
+editor: visual
+---
+
+## Loading library
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+mofo <- read_excel("dados-diversos.xlsx", "mofo")
+
+mofo |> 
+  ggplot(aes(treat, yld)) +
+  geom_col() +
+  geom_point(color = "red") +
+  facet_wrap(~study)
+
+```
+###Histogram
+```{r}
+h <- mofo |> 
+  ggplot(aes(scl)) +
+  geom_histogram(bins = 10)
+
+b <- mofo |> 
+  ggplot(aes(scl)) +
+  geom_boxplot()
+
+library(patchwork)
+
+h / b
+
+```
+
+##How to calculate fast average of the Scl variable within the mofo set 
+
+```{r}
+mean(mofo$scl)
+```
+
+##Another method
+```{r}
+summary(mofo)
+```
+
+##For transformation, you can use log or sqrt to create a new variable within dataset showing the transformation values  of a given variable  
+
+```{r}
+mofo2 <- mofo |> 
+  mutate(scl2 = sqrt(scl))
+
+hl <- mofo2 |> 
+  ggplot(aes(scl2)) +
+  geom_histogram(bins = 10)
+
+h / hl 
+
+```
+```{r}
+survey <- read_excel("dados-diversos.xlsx", "survey")
+
+survey |> 
+  filter(state == "RS") |> 
+  count(species, residue) |> 
+  arrange (species) |> 
+  rename(res = residue) |> 
+  mutate(n_class = case_when(
+    n <30 ~ "baixa",
+    TRUE ~ "Alta"))
+
+```
+
+

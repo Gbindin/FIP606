@@ -1,0 +1,63 @@
+---
+title: "AULA 2"
+format: html
+editor: visual
+---
+
+## Install packages
+
+```{r}
+library(tidyverse)
+library(metafor)
+library(gsheet)
+library(r4pde)
+
+```
+
+##Another Package
+
+```{r}
+library(dplyr)
+arrange(mtcars, cyl, disp)
+arrange(mtcars, mpg)
+Orange
+
+url <- 'docs.google.com/spreadsheets/d/1I9mJsS5QnXF2TNNntTy-HrcdHmIF9wJ8ONYvEJTXSNo'
+mtcars <- gsheet2tbl(url)
+
+d <- gsheet2tbl('docs.google.com/spreadsheets/d/1I9mJsS5QnXF2TNNntTy-HrcdHmIF9wJ8ONYvEJTXSNo')
+
+
+b <- mtcars
+c = b
+c <- b
+library(remotes)
+#install_github("emdelponte/r4pde")
+
+library(r4pde)
+head(mtcars)
+tail(mtcars)
+```
+
+##USage: arugment expected between relatives
+
+```{r}
+
+unit <- c(1:12)
+class <- c(2,3,1,1,3,4,5,0,2,5,2,1)
+ratings <- data.frame(unit, class)
+DSI(unit = ratings$unit, class = ratings$class, max = 6)
+
+DSI(unit = ratings$unit, 
+    class = ratings$class, 
+    6)
+ratings$class
+mean(ratings$class)
+
+sd(ratings$class)
+summary(ratings)
+summary(ratings$class)
+
+summary(class)
+
+```

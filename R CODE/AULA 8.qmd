@@ -1,0 +1,66 @@
+---
+title: "AULA 8"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+library(tidyverse)
+library(readxl)
+micelial <- read_excel("dados-diversos.xlsx","micelial")
+head(micelial)
+
+micelial |> 
+  ggplot(aes(especie, tcm))+
+  geom_boxplot()
+```
+
+```{r}
+aov1 <- aov(tcm ~  especie, 
+            data = micelial)
+summary(aov1)
+
+```
+
+```{r}
+library(performance)
+check_heteroscedasticity(aov1)
+check_normality(aov1)
+```
+
+```{r}
+library(DHARMa)
+plot(simulateResiduals(aov1))
+hist(aov1$residuals)
+qqnorm(aov1$residuals)
+qqline(aov1$residuals)
+```
+
+```{r}
+library(tidyverse)
+insects <- tbl_df(InsectSprays) |> 
+  select(spray, count)
+aov2 <- aov(count ~ spray, data = insects)
+summary(aov2)
+```
+
+```{r}
+head(insects)
+insects |> 
+  ggplot(aes(spray, count))+
+  geom_boxplot()
+```
+
+```{r}
+library(performance)
+check_heteroscedasticity(aov2)
+check_normality(aov2)
+```
+
+```{r}
+kruskal.test(count ~ spray, data = insects)
+
+library(agricolae)
+```

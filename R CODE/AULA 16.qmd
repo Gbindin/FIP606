@@ -1,0 +1,72 @@
+---
+title: "AULA 16"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+library(tidyverse)
+library(r4pde)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(remotes)
+library(ggspatial)
+library(readxl)
+
+
+sbr <- RustSoybean
+BRA <- ne_countries(country = "Nigeria",
+                    returnclass = "sf")
+ggplot(BRA)+geom_sf(fill = "white")
+```
+
+```{r}
+BRA <- ne_states(country = "Nigeria",
+                    returnclass = "sf")
+ggplot(BRA)+geom_sf(color = "white", fill = "darkgreen")+
+  theme_void()
+```
+
+```{r}
+sbr <- RustSoybean
+sbr2 <- sbr |>
+  separate(planting, into = c("year", "month", "day"),
+           sep = "-", remove = FALSE)
+
+BRA <- ne_states(country = "brazil",
+                    returnclass = "sf")
+MG <- BRA |> filter(name_en == "Minas Gerais")
+
+ggplot(BRA)+
+  geom_sf(fill = "white") + 
+  #geom_sf(data = MG, color = "black", fill = "blue")
+
+geom_point(data = sbr2, 
+             aes(longitude, latitude, color = year), 
+             alpha = 0.5) + 
+  geom_hline(yintercept = -23, 
+             linetype = "dashed",
+             color = "gray") +
+  theme_classic() +
+  annotation_north_arrow(style = north_arrow_nautical()) +
+  annotation_scale(location = "br") + theme(legend.position = "top")
+
+```
+
+```{r}
+ggplot(BRA) + 
+  geom_sf(fill = "white") + 
+  #geom_sf(data = MG, color = "black", fill = "blue")
+  geom_point(data = sbr2, 
+             aes(longitude, latitude, color = year, size = severity), 
+             alpha = 0.5) + 
+  geom_hline(yintercept = -23, 
+             linetype = "dashed",
+             color = "gray") +
+  theme_classic() +
+  annotation_north_arrow(style = north_arrow_nautical()) +
+  annotation_scale(location = "br")
+```

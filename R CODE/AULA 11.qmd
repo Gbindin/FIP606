@@ -1,0 +1,143 @@
+---
+title: "AULA 11"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+dat <- read_excel("dados-diversos.xlsx", "fungicida_vaso")
+
+dat2 <- dat |> 
+  mutate(inc = dis_sp/n_sp*100)
+
+dat2 |> 
+  ggplot(aes(x = treat,
+             y = inc)) + 
+  geom_jitter(width = 0.1) +
+  facet_wrap(~dose)
+```
+
+```{r}
+m1 <- aov(inc ~ treat*dose,
+          data = dat2)
+
+summary(m1)
+```
+
+```{r}
+library(performance)
+check_normality(m1)
+check_heteroscedasticity(m1)
+```
+
+```{r}
+m2 <- aov(log(inc+0.5) ~ treat*dose,
+          data = dat2)
+
+summary(m2)
+```
+
+```{r}
+library(performance)
+check_normality(m2)
+check_heteroscedasticity(m2)
+```
+
+```{r}
+library(DHARMa)
+plot(simulateResiduals(m1))
+```
+
+```{r}
+plot(simulateResiduals(m2))
+```
+
+```{r}
+library(emmeans)
+means_m1 <- emmeans(m1, ~treat|dose,
+                    type = "response")
+means_m1
+```
+
+```{r}
+means_m2 <- emmeans(m2, ~treat|dose,
+                    type = "response")
+means_m2
+```
+
+```{r}
+library(multcompView)
+library(multcomp)
+cld(means_m1)
+
+cld(means_m2)
+```
+
+#Coefficient of Variance
+
+```{r}
+library(agricolae)
+cv.model(m1)
+
+```
+
+```{r}
+milho <- read_excel("dados-diversos.xlsx", "armazena")
+
+milho |> 
+  filter(tempo == 8) |> 
+  ggplot(aes(factor(tipo), peso_mil, color = factor(umidade))) +
+  geom_jitter() + facet_wrap(~umidade)
+```
+
+```{r}
+milho2 <- milho |> 
+  filter(tempo == 8)
+
+m2 <- aov(peso_mil ~factor(tipo)*factor(umidade), data = milho2)
+
+summary(m2)
+```
+
+```{r}
+milho3 <- read_excel("dados-diversos.xlsx", "milho")
+
+m4 <- aov(yield ~hybrid*method,
+          data = milho3)
+
+summary(m4)
+plot(simulateResiduals(m4))
+```
+
+```{r}
+milho3 <- read_excel("dados-diversos.xlsx", "milho")
+
+m5 <- aov(yield~hybrid,
+          data = milho3)
+
+summary(m4)
+```
+
+```{r}
+library(performance)
+check_heteroscedasticity(m4)
+```
+
+```{r}
+library(DHARMa)
+plot(simulateResiduals(m4))
+```
+
+```{r}
+medias_m4 <- emmeans(m4, ~hybrid)
+medias_m4
+cld(medias_m4)
+```
+
+```{r}
+pwpm(medias_m4)
+pwpp(medias_m4)
+```

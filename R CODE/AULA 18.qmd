@@ -1,0 +1,106 @@
+---
+title: "AULA 18"
+format: html
+editor: visual
+---
+
+**##TRANSFORMATION OF BOX COX**
+
+The Analysis of Variance model assumes that there is homoscedasticity, that is, that the treatments present the same variability.
+
+Sometimes this assumption may not be met and thus, to correct this problem, there is a way out that is sometimes quite simple, which is data transformation.
+
+This technique consists of using a mathematical device to make the ANOVA model valid.
+
+**BOX COX TRANSFORMATION**
+
+Statisticians George Box and David Cox developed a procedure for identifying an appropriate exponent (Lambda = 1) to use to transform data into "normal form". When the Lambda value is 1, no transformation is needed, it produces results identical to the originals. The Lambda value indicates the power to which all data should be raised. For this, the Box-Cox power transformation searches from Lambda = -5 to Lamba = +5 until it finds the best value. The table below shows some common Box-Cox transformations, where Y' is the transformation of the original Y data. Note that for Lambda = 0, the transformation is NOT Y 0 (because it would be 1 for every value), but the logarithm of Y .
+
+|      |                       |
+|------|-----------------------|
+| 1    | Y\'                   |
+| -2   | Y^-2^ = 1/Y^2^        |
+| -1   | Y^-1^ = 1/Y^1^        |
+| -0.5 | Y^-0.5^ = 1/(Sqrt(Y)) |
+| 0    | log(Y)                |
+| 0.5  | Y^0.5^ = Sqrt(Y)      |
+| 1    | Y^1^ = Y              |
+| 2    | Y^2^                  |
+
+The BOXCOX function was implemented in the MASS package. the lamba (λ) is used to transform the response variable by the formula "responsevariable \^ lambda - 1."
+
+```{r}
+library(readxl)
+library(tidyverse)
+micelial <- read_excel("dados-diversos.xlsx", "fungicida_vaso")
+micelial <- micelial |> 
+  mutate(inc = inf_seeds/n_seeds*100,
+         rank_inc = rank(inc))
+
+# rank transforms data when you have two factors. rank transforms the response variable to two factors
+
+rank_anova <- aov(rank_inc ~ treat*dose, data = micelial)
+summary(rank_anova)
+```
+
+```{r}
+library(emmeans)
+means_rank <- emmeans(rank_anova, ~ treat | dose)
+library(multcomp)
+library(multcompView)
+cld(means_rank)
+
+```
+
+```{r}
+# use boxcox
+
+library(MASS)
+
+# creating the insect object
+
+insects <- tibble::as_tibble(InsectSprays)|> 
+  dplyr::select(spray, count)
+insects
+```
+
+```{r}
+b <- boxcox(lm(insects$count+0.1 ~ 1)) 
+
+# the value 0.1 is because there was zero in the data; insects$count is the response variable
+```
+
+```{r}
+# Find the lambda
+
+lambda <- b$x[which.max(b$y)]
+lambda
+```
+
+```{r}
+# After finding the lambda, the response variable is transformed with the formula below
+# insects$count2 creates count2 automatically, the transformed lambda
+
+insects$count2 <- (insects$count ^ lambda - 1) / lambda 
+insects$count2 
+
+# response transformed variable
+```
+
+```{r}
+## very asymmetrical
+
+hist(insects$count)
+```
+
+```{r}
+# more symmetrical
+
+hist(insects$count2)
+```
+
+```{r}
+insects$count2
+
+##The transformed lambda is used in the ANOVA
+```
