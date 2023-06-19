@@ -1,0 +1,149 @@
+---
+title: "AULA 6"
+format: html
+editor: visual
+---
+
+## Scatter Plot
+
+```{r}
+library(tidyverse)
+library(readxl)
+fungicida <- read_excel("dados-diversos.xlsx", "fungicida_campo")
+```
+
+```{r}
+fungicida |> 
+  ggplot(aes(trat, sev))+
+  geom_jitter(width = 0.1,
+              color = "gray60")+
+  stat_sum(fun = mean,
+           color = "red")
+```
+
+```{r}
+fungicida |> 
+  ggplot(aes(trat, sev))+
+  geom_jitter(width = 0.1,
+              color = "gray60")+
+  stat_summary(fun.data = mean_se,
+           color = "red")
+```
+
+```{r}
+fungicida |> 
+  ggplot(aes(sev, yld, 
+             color = trat,
+             size = yld))+
+  geom_jitter(width = 0.1)+
+  geom_point()+
+  scale_color_brewer()
+```
+
+```{r}
+library(ggthemes)
+fungicida |> 
+  ggplot(aes(sev, yld, 
+             color = trat))+
+  geom_jitter(width = 0.1)+
+  geom_point()+
+  scale_color_colorblind()
+```
+
+```{r}
+library(ggthemes)
+fungicida |> 
+  ggplot(aes(sev, yld, 
+             color = trat))+
+  geom_jitter(width = 0.1)+
+  geom_point(width = 0.5)+
+  scale_color_colorblind()
+```
+
+```{r}
+library(ggthemes)
+fungicida |> 
+  ggplot(aes(sev, yld))+
+  geom_jitter(width = 0.1)+
+  geom_point(size = 3,
+             color = "gray50")+
+  scale_color_colorblind()+
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "black",
+              linetype = "dashed")
+```
+
+##Factorial Experiment
+
+```{r}
+milho <-read_excel("dados-diversos.xlsx", "milho")
+
+```
+
+```{r}
+milho |> 
+ggplot(aes(hybrid, yield))+
+geom_point(color = "red",
+           size = 0.9)
+```
+
+```{r}
+milho |> 
+ggplot(aes(method, index,
+           colour = method))+
+  geom_jitter(width = 0.1)+
+facet_wrap(~hybrid)
+
+```
+
+##HIstogram
+
+```{r}
+milho |> 
+  ggplot(aes(x = yield))+
+  geom_histogram()+
+geom_histogram(bins = 10,
+               color = "black", fill = "steelblue")
+```
+
+```{r}
+library(patchwork)
+i <- milho |> 
+  ggplot(aes(x = index))+
+  geom_histogram()+
+geom_histogram(bins = 10,
+               color = "black", fill = "steelblue")
+i
+```
+
+```{r}
+y <- milho |> 
+  ggplot(aes(x = yield))+
+  geom_histogram()+
+geom_histogram(bins = 10,
+               color = "black", fill = "steelblue")
+y
+
+y+i
+```
+
+```{r}
+library(patchwork)
+
+(y+i)+
+  plot_annotation(tag_levels = "A",
+                  title = "Graph Histo")
+ggsave("sixth_graph.png", bg = "white")
+```
+
+```{r}
+insect <- read_excel("dados-diversos.xlsx", "mortalidade")
+
+insect |> 
+ pivot_longer(2:3,
+              names_to = "status",
+              values_to = "value") |> 
+ ggplot(aes(inseticida, value, fill = status))+
+ geom_col()
+```

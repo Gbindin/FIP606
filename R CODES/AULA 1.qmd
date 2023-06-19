@@ -1,0 +1,19 @@
+---
+title: "AULA 1"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+data <- c(0:10)
+plot(data)
+png("plot.png")
+dev.off()
+png("plot.png", width = 100, height = 100)
+```
+
+```{r}
+cars
+```

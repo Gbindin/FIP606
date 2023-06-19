@@ -1,0 +1,129 @@
+---
+title: "AULA 13"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+estande <- read_excel("dados-diversos.xlsx", "estande")
+
+estande |>
+  ggplot(aes(trat, nplants,))+
+  geom_point()+
+   facet_wrap(~exp)+
+    ylim(0, max(estande$nplants))
+geom_smooth(se = F, method = "lm")
+
+estande
+```
+
+```{r}
+exp1 <- estande |>
+  filter(exp == 1) 
+m1 <- lm(nplants ~trat, data = exp1)
+summary(m1)
+```
+
+```{r}
+exp2 <- estande |>
+  filter(exp == 2) 
+m2 <- lm(nplants ~trat, data = exp2)
+summary(m2)
+```
+
+```{r}
+exp3 <- estande |>
+  filter(exp == 3) 
+m3 <- lm(nplants ~trat, data = exp3)
+summary(m3)
+```
+
+```{r}
+library(report)
+report(m1)
+```
+
+```{r}
+report(m2)
+```
+
+```{r}
+report(m3)
+```
+
+```{r}
+g1 <- exp1 |>
+  ggplot(aes(trat, nplants)) +
+  geom_point() +
+  geom_abline(intercept = 52.5, slope = -0.24) +
+  ylim(0, max(estande$nplants)) +
+  geom_smooth(method = "lm", se = F) +
+theme_bw() +
+  annotate(geom = "text", x = 24, y = 70, 
+           label = "y = 52.5-0.24x")
+```
+
+```{r}
+g2 <- exp2 |>
+  ggplot(aes(trat, nplants)) +
+  geom_point() +
+  geom_abline(intercept = 52.5, slope = -0.24) +
+  ylim(0, max(estande$nplants)) +
+  geom_smooth(method = "lm", se = F) +
+theme_bw() +
+  annotate(geom = "text", x = 24, y = 70, 
+           label = "y = 52.5-0.24x")
+```
+
+```{r}
+g3 <- exp3 |>
+  ggplot(aes(trat, nplants)) +
+  geom_point() +
+  geom_abline(intercept = 52.5, slope = -0.24) +
+  ylim(0, max(estande$nplants)) +
+  geom_smooth(method = "lm", se = F) +
+theme_bw() +
+  annotate(geom = "text", x = 24, y = 70, 
+           label = "y = 52.5-0.24x")
+```
+
+```{r}
+library(patchwork)
+g1 + g2
+```
+
+```{r}
+g1|g2|g3
+```
+
+```{r}
+library(lme4)
+mix <- lmer(nplants ~ trat + (trat|exp), 
+            data = estande)
+summary(mix)
+library(car)
+anova(mix)
+```
+
+```{r}
+lm1 <- lm(nplants~trat, data = exp3)
+summary(lm1)
+```
+
+```{r}
+glm1 <- glm(nplants~trat, family = "gaussian", data = exp3)
+summary(glm1)
+```
+
+```{r}
+glm2 <- glm(nplants~trat + (1|bloco), family = poisson(link = "log"), data = exp3)
+summary(glm2)
+```
+
+```{r}
+AIC(glm1)
+AIC(glm2)
+```
